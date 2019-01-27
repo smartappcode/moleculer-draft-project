@@ -49,6 +49,21 @@ module.exports = {
             }
         },
 
+        remove: {
+            params: {
+                key: {
+                    type: "number",
+                    positive: true,
+                    integer: true,
+                    convert: true
+                }
+            },
+            handler(ctx){
+                this.store.delete(key);
+                return this.store;
+            }
+        },
+
         getproducts: {
             params: { key: [{ type: "array", items: { type: "number", integer: true, positive: true, convert: true } }, { type: "number", integer: true, positive: true, convert: true }] },
             handler(ctx) {
