@@ -59,7 +59,31 @@ module.exports = {
                 }
             },
             handler(ctx){
-                this.store.delete(key);
+                this.store.delete(Number(ctx.params.key));
+                return this.store;
+            }
+        },
+        update: {
+            params: {
+                key: {
+                    type: "number",
+                    positive: true,
+                    integer: true,
+                    convert: true
+                },
+                title: {
+                    type: "string"
+                },
+                price: {
+                    type: "number",
+                    positive: true,
+                    integer: true,
+                    convert: true
+                },
+            },
+            handler(ctx) {
+                let { key, title, price } = ctx.params;
+                this.store.set(key, {title, price});
                 return this.store;
             }
         },
