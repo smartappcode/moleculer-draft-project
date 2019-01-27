@@ -13,7 +13,7 @@ module.exports = {
 
     },
 
-    mixins: [db],
+    mixins: [],
 	/**
 	 * Service dependencies
 	 */
@@ -37,7 +37,7 @@ module.exports = {
         create: {
             params: {
                 title: { type: "string" },
-                price: { type: "number", integer: true, convert: true, positive: true  }
+                price: { type: "number", integer: true, convert: true, positive: true }
             },
             handler(ctx) {
                 let { title, price } = ctx.params;
@@ -58,7 +58,7 @@ module.exports = {
                     convert: true
                 }
             },
-            handler(ctx){
+            handler(ctx) {
                 this.store.delete(Number(ctx.params.key));
                 return this.store;
             }
@@ -83,27 +83,45 @@ module.exports = {
             },
             handler(ctx) {
                 let { key, title, price } = ctx.params;
-                this.store.set(key, {title, price});
+                this.store.set(key, { title, price });
                 return this.store;
             }
         },
 
         getproducts: {
-            params: { key: [{ type: "array", items: { type: "number", integer: true, positive: true, convert: true } }, { type: "number", integer: true, positive: true, convert: true }] },
+            params: {
+                key: [{
+                    type: "array",
+                    items:
+                    {
+                        type: "number",
+                        integer: true,
+                        positive: true,
+                        convert: true
+                    }
+                }, {
+                    type: "number",
+                    integer: true,
+                    positive: true,
+                    convert: true
+                }]
+            },
             handler(ctx) {
+                let { key } = ctx.params;
+                if(!isNaN(Number(key))) key = [].concat(key); //key = [...key];
+                return [...this.store].filter(item => !key.includes(item[0]));
+                /*
                 let newArrCart = [];
                 let count = 0;
                 // const keyarr = [1, 3];
-                const keyarr = ctx.params.key;
                 for (let [key, value] of this.store.entries()) {
-                    if (keyarr.includes(key)) {
+                    if (key.includes(key)) {
                         newArrCart[count] = value;
                         count++;
                     }
                 }
                 return newArrCart;
 
-                /*
                         getproducts: {
                             params: { key: [{ type: "array", items: { type: "number", integer: true, positive: true, convert: true } }, { type: "number", integer: true, positive: true, convert: true }] },
                             handler(ctx) {

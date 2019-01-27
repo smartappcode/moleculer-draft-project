@@ -13,7 +13,7 @@ module.exports = {
 
     },
 
-    mixins: [db],
+    mixins: [],
 	/**
 	 * Service dependencies
 	 */
@@ -49,19 +49,41 @@ module.exports = {
             params: { key: { type: "array", items: { type: "number", integer: true, positive: true, convert: true } } },
 
             handler(ctx) {
-               // let arrKeyProd = [1, 2];
+                // let arrKeyProd = [1, 2];
                 return this.broker.call("products.getproducts", { key: ctx.params.key });
-                
+
             }
         },
         addtocart: {
             params: {
-                key: { type: "number", integer: true, convert: true, positive: true },
+                // key: { type: "number", integer: true, convert: true, positive: true },
                 productId: { type: "number", integer: true, convert: true, positive: true }
             },
             handler(ctx) {
-                const productId = Number(ctx.params.productId);
-                return this.store.set({ productId: productId });
+
+                this.myCart = {};
+                let { productId } = ctx.params;
+                if (this.myCart.hasOwnProperty(productId)) {
+                    this.myCart[productId]+=1;
+                } else {
+                    this.myCart[productId] = 1;
+                }
+                return this.myCart;
+
+                /*
+                let {productId} = ctx.params;
+                this.myCart.push(productId);
+                return this.myCart;
+                */
+            }
+        },
+
+        checkout: {
+            params: {
+
+            },
+            handler(ctx) {
+
             }
         }
     },
@@ -84,18 +106,8 @@ module.exports = {
 	 * Service created lifecycle event handler
 	 */
     created() {
-        this.store = new Map([
-            [
-                1, {
-                    productId: 1,
-                }
-            ],
-            [
-                2, {
-                    productId: 2,
-                }
-            ]
-        ]);
+        //  this.myCart = [];
+        this.myCart = {};
     },
 
 	/**

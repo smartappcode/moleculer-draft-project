@@ -14,7 +14,7 @@ module.exports = {
 			path: "/api",
 			aliases: {
 				"REST users": "users",
-				"POST products/addtocart": "products.create",
+				"GET products/getproducts": "products.getproducts",
 				"REST products": "products",
 				"GET cart/showcart": "cart.showcart",
 				"POST cart/addtocart": "cart.addtocart",
