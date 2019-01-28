@@ -61,10 +61,9 @@ module.exports = {
             },
             handler(ctx) {
 
-                this.myCart = {};
                 let { productId } = ctx.params;
                 if (this.myCart.hasOwnProperty(productId)) {
-                    this.myCart[productId]+=1;
+                    this.myCart[productId]++;
                 } else {
                     this.myCart[productId] = 1;
                 }
@@ -78,14 +77,20 @@ module.exports = {
             }
         },
 
-        checkout: {
-            params: {
-
-            },
-            handler(ctx) {
-
-            }
+        checkout() {
+            let finalPrice = 0;
+            this.broker.call("products.list")
+                .then(product => {
+                    for (let [key, value] of product) {
+                        if (key in this.myCart) {
+                            let productPrice = value * this.myCart[key];
+                            finalPrice = +productPrice;
+                        }
+                    }
+                    return Promise.resolve(finalPrice);
+                });
         }
+
     },
 
 	/**
@@ -107,7 +112,9 @@ module.exports = {
 	 */
     created() {
         //  this.myCart = [];
-        this.myCart = {};
+        this.myCart = {
+            "1": 2
+        };
     },
 
 	/**

@@ -17,6 +17,7 @@ module.exports = {
 				"GET products/getproducts": "products.getproducts",
 				"REST products": "products",
 				"GET cart/showcart": "cart.showcart",
+				"GET cart/checkout": "cart.checkout",
 				"POST cart/addtocart": "cart.addtocart",
 				"REST cart": "cart"
 			},
